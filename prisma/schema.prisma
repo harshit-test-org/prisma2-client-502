@@ -1,0 +1,47 @@
+datasource mysql {
+  provider = "mysql"
+  url      = env("MYSQL_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Organization {
+  id        Int       @default(autoincrement()) @id
+  uid       String?   @unique
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model UserOrganization {
+  organization Organization
+  role         Role
+  user         User
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@id(fields: [role, user, organization])
+}
+
+model User {
+  id        Int       @default(autoincrement()) @id
+  uid       String?   @unique
+  email     String    @unique
+  firstName String?
+  lastName  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Role {
+  id          Int      @default(autoincrement()) @id
+  uid         String?  @unique
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
